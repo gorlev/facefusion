@@ -36,7 +36,7 @@ apt install -y curl
 # Install Miniconda
 print_message "Installing Miniconda..."
 curl -LO https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p -u "$HOME/miniconda"
+bash Miniconda3-latest-Linux-x86_64.sh -b -p "$HOME/miniconda"
 rm Miniconda3-latest-Linux-x86_64.sh
 export PATH="$HOME/miniconda/bin:$PATH"
 
