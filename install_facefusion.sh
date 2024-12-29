@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #
 # FaceFusion Installation Script (English)
 # Tested on Ubuntu/Debian based systems.
@@ -13,7 +14,7 @@ fi
 
 echo "Step 1) Installing system packages..."
 apt-get update -y
-apt-get install -y git-all curl ffmpeg mesa-va-drivers
+apt-get install -y git-all curl ffmpeg mesa-va-drivers pciutils
 
 echo
 echo "Step 2) Installing Miniconda to /opt/miniconda..."
@@ -28,8 +29,18 @@ export PATH="/opt/miniconda/bin:$PATH"
 echo
 echo "Step 3) Initializing conda in all shells..."
 conda init --all >/dev/null 2>&1 || true
-# Load conda for the current shell
-eval "$(/opt/miniconda/bin/conda shell.bash hook)"
+
+# -- İŞTE ÖNEMLİ KISIM! --
+# Script içerisinden conda komutlarını kullanabilmek için conda'yı elle kaynak (source) ediyoruz.
+# Bazı sürümlerde `eval "$(conda shell.bash hook)"` de kullanılabilir; örnek:
+#     eval "$(/opt/miniconda/bin/conda shell.bash hook)"
+# Onu tercih ederseniz comment-out yapabilirsiniz.
+
+# Örnek 1 (eval):
+# eval "$(/opt/miniconda/bin/conda shell.bash hook)"
+
+# Örnek 2 (source):
+source /opt/miniconda/etc/profile.d/conda.sh
 
 echo
 echo "Step 4) Creating the facefusion conda environment..."
@@ -58,7 +69,7 @@ echo "Step 7) Installing accelerator libraries..."
 case "$GPU_VENDOR" in
   "nvidia")
     echo "NVIDIA detected. Installing CUDA and TensorRT..."
-    conda install --yes conda-forge::cuda-runtime=12.4.1 conda-forge::cudnn=9.2.1.18
+    conda install --yes conda-forge::cuda-runtime=12.6.3 conda-forge::cudnn=9.3.0.75
     pip install tensorrt==10.6.0 --extra-index-url https://pypi.nvidia.com
     ;;
   "amd")
